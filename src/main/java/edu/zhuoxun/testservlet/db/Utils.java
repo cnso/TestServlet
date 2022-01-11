@@ -11,16 +11,14 @@ import java.util.Properties;
  * Created by Jash
  */
 public class Utils {
-    private static final DataSource dataSource;
-    static {
+    private static DataSource dataSource;
+    public static void initDataSource() {
         Properties properties = new Properties();
         try {
             properties.load(Utils.class.getClassLoader().getResourceAsStream("db.properties"));
         } catch (IOException e) {
             e.printStackTrace();
         }
-//        dataSource = new DruidDataSource();
-//        dataSource.configFromPropety(properties);
         DataSource temp = null;
         try {
             temp = DruidDataSourceFactory.createDataSource(properties);
@@ -31,5 +29,9 @@ public class Utils {
     }
     public static DataSource getDataSource() {
         return dataSource;
+    }
+    public static void destroyDataSource() {
+        ((DruidDataSource) dataSource).close();
+        dataSource = null;
     }
 }
